@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-labelledby="logo-title logo-description">
+  <title id="logo-title">Логотип АО «Алгоритм»</title>
+  <desc id="logo-description">Стилізована літера A з висхідною стрілою</desc>
+  <defs>
+    <linearGradient id="navy" x1="180" y1="850" x2="790" y2="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#052b4d"/>
+      <stop offset="1" stop-color="#0a477f"/>
+    </linearGradient>
+    <path
+      id="arrow"
+      d="M160 670C340 520 560 445 828 431l-34-48 141 35-108 119 12-61C590 488 378 558 190 718l-30-48Z"
+    />
+    <mask id="letter-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000">
+      <rect width="1000" height="1000" fill="#fff"/>
+      <use href="#arrow" fill="#000" stroke="#000" stroke-width="16" stroke-linejoin="round"/>
+    </mask>
+  </defs>
+
+  <path
+    fill="url(#navy)"
+    fill-rule="evenodd"
+    mask="url(#letter-cut)"
+    d="M70 850 420 145h160l350 705H755L500 325 245 850H70Zm306-146h248L500 448 376 704Z"
+  />
+
+  <use href="#arrow" fill="url(#navy)"/>
+</svg>
