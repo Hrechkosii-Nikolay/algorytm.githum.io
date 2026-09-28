@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="1000" height="1000"><metadata><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"><rdf:Description><dc:creator>RealFaviconGenerator</dc:creator><dc:source>https://realfavicongenerator.net</dc:source></rdf:Description></rdf:RDF></metadata><g clip-path="url(#SvgjsClipPath1189)"><rect width="1000" height="1000" fill="#e8e8e8"></rect><g transform="matrix(0.7177033492822966,0,0,0.7177033492822966,50,50)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254" role="img" aria-labelledby="title description" width="1254" height="1254"><title id="title">Логотип АО «Алгоритм»</title><desc id="description">Стилізована літера A з висхідною стрілою</desc><defs>
+    <linearGradient id="navy" x1="150" y1="1050" x2="980" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#052b4d"></stop>
+      <stop offset="1" stop-color="#0a477f"></stop>
+    </linearGradient>
+  <clipPath id="SvgjsClipPath1189"><rect width="1000" height="1000" x="0" y="0" rx="250" ry="250"></rect></clipPath></defs><g transform="translate(100.32 0) scale(.84 1)">
+    <path d="M252 807 506 352 563 244h129l179 329-125 22-119-224-168 314-40 18-73 40Z" fill="url(#navy)"></path>
+    <path d="M138 1009 237 836l38-32 53-37 67-39 74-36 81-32 82-26 85-22 89-18 97-14 76-6 90-1 56 4-106 102h-35l15-34-86-1-62 4-108 14-82 16-127 34-59 23c-20 8-65 39-81 67l-121 209Z" fill="url(#navy)"></path>
+    <path d="M788 667 917 655l199 356H982Z" fill="url(#navy)"></path>
+  </g></svg></g></g></svg>

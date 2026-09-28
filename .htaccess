@@ -1,0 +1,152 @@
+# ==========================================
+# Основні налаштування сайту АО «Алгоритм»
+# ==========================================
+
+AddDefaultCharset UTF-8
+DirectoryIndex index.html
+Options -Indexes
+
+# ------------------------------------------
+# Канонічні URL та захист прихованих файлів
+# ------------------------------------------
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Забороняємо доступ до прихованих файлів і каталогів,
+  # але залишаємо доступним каталог .well-known.
+  RewriteRule "(^|/)\.(?!well-known(?:/|$))" - [F,L,NC]
+
+  # Перенаправляємо www на домен без www.
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L,NE]
+
+  # Примусово використовуємо HTTPS.
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L,NE]
+
+  # Прибираємо index.html з публічної адреси.
+  RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html(?:[?\s]) [NC]
+  RewriteRule ^(.*/)?index\.html$ /$1 [R=301,L,NE]
+
+  # Прибираємо кінцевий слеш, крім головної сторінки
+  # та реальних каталогів.
+  RewriteCond %{REQUEST_URI} !^/$
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [R=301,L,NE]
+
+  # Не переписуємо службові SEO-файли.
+  RewriteRule ^(?:robots\.txt|sitemap\.xml|site\.webmanifest)$ - [L,NC]
+</IfModule>
+
+# ------------------------------------------
+# Кешування
+# ------------------------------------------
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/plain "access plus 1 day"
+  ExpiresByType application/xml "access plus 1 day"
+  ExpiresByType application/manifest+json "access plus 1 day"
+
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:html?)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  <FilesMatch "\.(?:css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+
+  <FilesMatch "\.(?:ico|jpe?g|png|gif|webp|avif|svg|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  <FilesMatch "^(?:robots\.txt|sitemap\.xml|site\.webmanifest)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+</IfModule>
+
+# ------------------------------------------
+# Gzip та Brotli
+# ------------------------------------------
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE application/xml application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+<IfModule mod_brotli.c>
+  BrotliCompressionQuality 5
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml
+  AddOutputFilterByType BROTLI_COMPRESS application/javascript application/json
+  AddOutputFilterByType BROTLI_COMPRESS application/xml application/manifest+json
+  AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+</IfModule>
+
+# ------------------------------------------
+# Заголовки безпеки та Content Security Policy
+# ------------------------------------------
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000"
+
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-src https://www.google.com https://maps.google.com; form-action 'self'; manifest-src 'self'; media-src 'self'; worker-src 'self'"
+</IfModule>
+
+# ------------------------------------------
+# Заборона доступу до службових файлів
+# ------------------------------------------
+
+<FilesMatch "(?i)(?:^|\.)(?:htaccess|htpasswd|env|ini|log|sh|sql|bak|dist|config)$">
+  Require all denied
+</FilesMatch>
+
+# ------------------------------------------
+# Сторінка помилки
+# ------------------------------------------
+
+ErrorDocument 404 /404.html
+
+# ------------------------------------------
+# MIME-типи
+# ------------------------------------------
+
+<IfModule mod_mime.c>
+  AddType image/avif .avif
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+  AddType font/woff .woff
+  AddType font/woff2 .woff2
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# ==========================================
+# Кінець конфігурації
+# ==========================================
