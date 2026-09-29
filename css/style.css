@@ -382,9 +382,17 @@ ul {
   font-weight:500
 }
 .text-link {
+  display:inline-flex;
+  align-items:center;
+  gap:.3em;
   color:var(--navy-soft);
   font-weight:750;
-  text-underline-offset:5px
+  text-underline-offset:5px;
+  white-space:nowrap
+}
+.text-link .inline-link-icon {
+  flex:0 0 auto;
+  margin:0
 }
 .principles-list {
   display:grid;
@@ -515,7 +523,7 @@ ul {
   display:block;
   margin-bottom:18px;
   color:#9a6900;
-  font-size:.78rem;
+  font-size: 1rem;
   font-weight:800;
   letter-spacing:.12em
 }
@@ -1549,8 +1557,8 @@ h1,h2,h3 {
   border-radius:20px
 }
 details {
-  margin:14px 0;
-  padding:22px 24px;
+  margin:6px 0;
+  padding:16px 22px;
   background:#f5f5f7;
   border:0;
   border-radius:18px;
