@@ -1,6 +1,8 @@
 const nav=document.querySelector('.main-nav');
 const menuButton=document.querySelector('.menu-toggle');
 const menuIconUse=menuButton?.querySelector('.menu-toggle__icon use');
+const menuIconBase=menuIconUse?.getAttribute('href')?.split('#')[0]||'./img/sprite.svg';
+const isEnglish=document.documentElement.lang==='en';
 const submenuItems=document.querySelectorAll('.has-submenu');
 
 const closeMenu=()=>{
@@ -8,8 +10,8 @@ const closeMenu=()=>{
   nav.classList.remove('is-menu-open');
   document.body.classList.remove('menu-open');
   menuButton.setAttribute('aria-expanded','false');
-  menuButton.setAttribute('aria-label','Відкрити меню');
-  menuIconUse?.setAttribute('href','./img/sprite.svg#menu');
+  menuButton.setAttribute('aria-label',isEnglish?'Open menu':'Відкрити меню');
+  menuIconUse?.setAttribute('href',`${menuIconBase}#menu`);
 };
 
 if(nav&&menuButton){
@@ -17,8 +19,8 @@ if(nav&&menuButton){
     const isOpen=nav.classList.toggle('is-menu-open');
     document.body.classList.toggle('menu-open',isOpen);
     menuButton.setAttribute('aria-expanded',String(isOpen));
-    menuButton.setAttribute('aria-label',isOpen?'Закрити меню':'Відкрити меню');
-    menuIconUse?.setAttribute('href',`./img/sprite.svg#${isOpen?'close':'menu'}`);
+    menuButton.setAttribute('aria-label',isEnglish?(isOpen?'Close menu':'Open menu'):(isOpen?'Закрити меню':'Відкрити меню'));
+    menuIconUse?.setAttribute('href',`${menuIconBase}#${isOpen?'close':'menu'}`);
   });
   nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
 }
@@ -45,6 +47,31 @@ faqItems.forEach(item=>{
 
 const phoneInputs=document.querySelectorAll('.input-tel');
 const phoneErrorMessage='Будь ласка, введіть повний номер телефону';
+const internationalPhoneErrorMessage='Enter a valid international phone number including the country code';
+
+const sanitizeInternationalPhone=value=>{
+  let sanitized=value.replace(/[^0-9+\s().-]/g,'');
+  const hasPlus=sanitized.includes('+');
+  sanitized=sanitized.replace(/\+/g,'').trimStart();
+
+  let digitCount=0;
+  sanitized=[...sanitized].filter(character=>{
+    if(!/\d/.test(character))return true;
+    digitCount+=1;
+    return digitCount<=15;
+  }).join('');
+
+  return hasPlus?`+${sanitized}`:sanitized;
+};
+
+const updateInternationalPhoneValidity=input=>{
+  const value=input.value.trim();
+  const digits=value.replace(/\D/g,'');
+  const hasOnlyPhoneCharacters=/^\+[0-9\s().-]+$/.test(value);
+  const isComplete=hasOnlyPhoneCharacters&&digits.length>=7&&digits.length<=15&&digits[0]!=='0';
+  input.setCustomValidity(!value||isComplete?'':internationalPhoneErrorMessage);
+  if(isComplete)input.removeAttribute('aria-invalid');
+};
 
 const getNationalPhoneDigits=value=>{
   const hasCountryCode=/^\s*\+?38/.test(value);
@@ -94,6 +121,22 @@ const getPhoneCaretPosition=(value,nationalDigitCount)=>{
 };
 
 phoneInputs.forEach(input=>{
+  if(isEnglish){
+    input.maxLength=25;
+    input.placeholder='+44 20 1234 5678';
+
+    input.addEventListener('beforeinput',event=>{
+      if(typeof event.data==='string'&&/[^0-9+\s().-]/.test(event.data))event.preventDefault();
+    });
+    input.addEventListener('input',()=>{
+      input.value=sanitizeInternationalPhone(input.value);
+      updateInternationalPhoneValidity(input);
+    });
+    input.addEventListener('blur',()=>updateInternationalPhoneValidity(input));
+    input.addEventListener('invalid',()=>input.setAttribute('aria-invalid','true'));
+    return;
+  }
+
   input.addEventListener('focus',()=>{
     if(input.value)return;
     input.value='+38 (0';
@@ -179,19 +222,28 @@ contactForms.forEach(contactForm=>{
     if(!contactForm.reportValidity())return;
 
     const data=new FormData(contactForm);
-    const text=`Звернення до АО «Алгоритм»\nІм’я: ${data.get('name')}\nТелефон: ${data.get('phone')}\nЗапитання: ${data.get('message')}`;
+    const shareTitle=isEnglish?'Enquiry for Algorithm Law Firm':'Звернення до АО «Алгоритм»';
+    const text=isEnglish
+      ?`${shareTitle}\nName: ${data.get('name')}\nPhone: ${data.get('phone')}\nQuestion: ${data.get('message')}`
+      :`${shareTitle}\nІм’я: ${data.get('name')}\nТелефон: ${data.get('phone')}\nЗапитання: ${data.get('message')}`;
 
     try{
       if(navigator.share){
-        await navigator.share({title:'Звернення до АО «Алгоритм»',text});
-        contactStatus.textContent='Оберіть зручний застосунок, щоб надіслати звернення.';
+        await navigator.share({title:shareTitle,text});
+        contactStatus.textContent=isEnglish
+          ?'Choose an app to send your enquiry.'
+          :'Оберіть зручний застосунок, щоб надіслати звернення.';
         return;
       }
       await navigator.clipboard.writeText(text);
-      contactStatus.textContent='Текст звернення скопійовано. Надішліть його у зручному месенджері або зателефонуйте нам.';
+      contactStatus.textContent=isEnglish
+        ?'The enquiry has been copied. Send it using your preferred messenger or call us.'
+        :'Текст звернення скопійовано. Надішліть його у зручному месенджері або зателефонуйте нам.';
     }catch(error){
       if(error?.name!=='AbortError'){
-        contactStatus.textContent='Не вдалося підготувати звернення. Зателефонуйте нам: +38 063 244 65 82.';
+        contactStatus.textContent=isEnglish
+          ?'We could not prepare the enquiry. Please call us on +38 063 244 65 82.'
+          :'Не вдалося підготувати звернення. Зателефонуйте нам: +38 063 244 65 82.';
       }
     }
   });
