@@ -1748,8 +1748,11 @@ a.contact-method:hover {
   color:#0066cc
 }
 .contact-modal__links {
+  width:fit-content;
+  max-width:100%;
+  margin:8px auto 0;
   flex-direction:column;
-  align-items:flex-start;
+  align-items:stretch;
   gap:12px
 }
 .contact-modal__links .contact-modal__phone {
@@ -1972,7 +1975,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
   }
   .contact-modal__links {
     flex-direction:column;
-    align-items:flex-start;
+    align-items:stretch;
     gap:12px
   }
   .footer-top {
